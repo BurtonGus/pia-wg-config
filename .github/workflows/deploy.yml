@@ -18,24 +18,15 @@ jobs:
       run: go test ./...
 
     - name: Build to linux-amd64
-      run: GOOS=linux/amd64 go build
+      run: go build .
 
-  Make-Arm-Binary:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-
-      - name: prepare software for multi arch
-        run: sudo apt-get install -y qemu binfmt-support qemu-user-static
-
-      - name: reset qemu user statistics
-        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-
-      - name: make binary
-        run: docker run --rm --platform linux/arm64/v8 -t -v "${PWD}:/build" arm64v8/golang /bin/bash -c "cd /build && GOOS=darwin  go build main.go"
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: $(basename $GITHUB_REPOSITORY)
-          path: main
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
