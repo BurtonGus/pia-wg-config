@@ -4,11 +4,11 @@ concurrency:
   cancel-in-progress: true
 
 on: [push, pull_request]
-name: Test
+name: Deploy Application
 jobs:
-  test:
-    strategy:
+  Deploy:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/setup-go@v3
       with:
