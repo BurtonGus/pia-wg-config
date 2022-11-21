@@ -16,36 +16,14 @@ jobs:
     - uses: actions/checkout@v3
     - run: go test ./...
 
-  release-linux-386:
-    name: release linux/386
+  release:
+    name: Generate cross-platform builds
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - name: Compile and upload release
-      uses: StevenCyb/sc-go-cross-build@0.1.0
-      with: 
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        platform: "linux/386"
-        include-files: "README.md"
-  release-linux-amd64:
-    name: release linux/amd64
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Compile and upload release
-      uses: StevenCyb/sc-go-cross-build@0.1.0
-      with: 
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        platform: "linux/amd64"
-        include-files: "README.md"
-  release-linux-arm:
-    name: release linux/arm
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Compile and upload release
-      uses: StevenCyb/sc-go-cross-build@0.1.0
-      with: 
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        platform: "linux/arm"
-        include-files: "README.md"
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Generate build files
+        uses: thatisuday/go-cross-build@v1
+        with:
+            platforms: 'linux/amd64, darwin/amd64, windows/amd64'
+            compress: 'true'
